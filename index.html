@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./style.css">
+  <title>Puissance 4</title>
+</head>
+<body class="bg-pink-500 h-screen">
+
+  <div class="flex flex-col justify-center text-center mt-6 mb-12">
+    <h1 class="sm:text-8xl text-6xl font-zoika text-yellow-400">Puissance 4</h1>
+  </div>
+
+  <div id="selectOptions" class="mb-8 container mx-auto" style="display: block;">
+    <form action="#" class="grid grid-cols-12 gap-4 justify-center"> <!-- modifier les classes Css de la grille -->
+      
+      <div class="flex flex-col items-center sm:col-span-4 col-span-12 border border-yellow-400 rounded-md p-2 mx-2">
+        <label for="rowsNumber" class="mb-2 text-yellow-400">Nombre de lignes</label>
+        <input type="number" name="rowsNumber" id="rowsNumber" min="1" max="10"
+          class="border border-custom rounded-md p-2 mb-2 text-sky-600 w-32" value="7" required>
+        <label for="colsNumber" class="mb-2 text-yellow-400">Nombre de colonnes</label>
+        <input type="number" name="colsNumber" id="colsNumber" min="1" max="10"
+          class="border border-custom rounded-md p-2 text-sky-600 w-32" value="7" required>
+      </div>
+
+      <div class="flex flex-col items-center sm:col-span-4 col-span-12 border border-yellow-400 rounded-md p-2 mx-2">
+        <label for="player1name" class="mb-2 text-yellow-400">Nom du joueur 1 :</label>
+        <input type="text" name="player1name" id="player1name"
+          class="border border-custom rounded-md p-2 text-sky-600 sm:w-56 w-48" value="Player1"  maxlength="9" required>
+        <label for="player1color" class="mt-2 mb-2 text-yellow-400">Couleur du joueur 1 :</label>
+        <input type="color" name="player1color" id="player1color"
+          class="border border-custom rounded-md p-2 h-10 sm:w-56 w-48" value="#f472b6" required>
+      </div>
+
+      <div class="flex flex-col items-center sm:col-span-4 col-span-12 border border-yellow-400 rounded-md p-2 mx-2">
+        <label for="player2name" class="mb-2 text-yellow-400">Nom du joueur 2 :</label>
+        <input type="text" name="player2name" id="player2name"
+          class="border border-custom rounded-md p-2 text-sky-600 sm:w-56 w-48" value="Player2"  maxlength="9" required>
+        <label for="player2color" class="mt-2 mb-2 text-yellow-400">Couleur du joueur 2 :</label>
+        <input type="color" name="player2color" id="player2color"
+          class="border border-custom rounded-md p-2 h-10 sm:w-56 w-48" value="#fde047" required>
+      </div>
+
+      <div class="flex justify-center mx-2 sm:my-6 col-span-12"> <!-- modifier les classes CSS pour afficher le bouton de validation au centre -->
+        <button type="submit" class="bg-sky-600 hover:bg-sky-700 text-yellow-400 font-bold py-2 px-4 rounded">
+          Valider
+        </button>
+      </div>
+      
+    </form>
+  </div>
+
+  <section id="gameSection" style="display: none;" class="container mx-auto">
+    <div class="grid grid-cols-12 gap-4 justify-center">
+
+      <div id="gamePlay" class="flex flex-col items-center sm:col-span-4 col-span-12 mx-auto">
+
+        <div id="playersScore" class="flex flex-col items-center mb-8">
+          <table class="">
+            <tr>
+              <th id="tableScore" colspan="2" class="sm:text-6xl text-4xl text-yellow-400 font-zoika">SCORE</th>
+            </tr>
+            <tr>
+              <th id="player1ScoreHead" class="text-center text-2xl text-sky-700 w-32"><p id="player1ScoreHeadSpan" class="truncate"><!-- Affichage du nom du joueur 1 --></p></th>
+              <th id="player2ScoreHead" class="text-center text-2xl text-sky-700 w-32"><p id="player2ScoreHeadSpan" class="truncate"><!-- Affichage du nom du joueur 2 --></p></th>
+            </tr>
+            <tr>
+              <td id="player1Score" class="text-center text-3xl text-sky-700 w-32"><!-- Affichage du score du joueur 1 --></td>
+              <td id="player2Score" class="text-center text-3xl text-sky-700 w-32"><!-- Affichage du score du joueur 2 --></td>
+            </tr>
+          </table>
+        </div>
+
+        <!-- div où s'affichent les informations de jeu-->
+        <p class="text-3xl text-sky-700">Pion n°<span id="gameTurnDisplay"><!-- Affichage du tour de jeu --></span></p>
+        <p class="text-3xl text-sky-700 text-center">C'est au tour de <span id="playerNameDisplay" class="text-ellipsis"><!-- Affichage du joueur à qui c'est le tour --></span></p>
+        <div class="flex flex-row justify-between mt-10">
+          <button class="bg-sky-600 hover:bg-sky-700 text-yellow-400 font-bold py-2 px-4 rounded mx-2 w-32" id="gamePlayReset">Reset</button>
+          <a href="/">
+            <button class="bg-sky-600 hover:bg-sky-700 text-yellow-400 font-bold py-2 px-4 rounded mx-2 w-32" id="gamePlayQuit">Quitter</button>
+          </a>          
+        </div>
+      </div>
+    
+      <div id="p4" class="flex flex-col items-center sm:col-span-8 col-span-12 m-1">
+        <!-- div où s'affiche le jeu-->
+      </div>  
+     
+    </div>
+  </section>
+
+  <footer class="sm:fixed sm:bottom-0 w-full text-center text-lg text-yellow-400 mb-4">
+    <p>created by <a href="https://renaud-portfolio.projets.garage404.com/" target="_blank">Renaud Bresson</a> - june 2023</p>
+  </footer>
+
+
+
+  <script type="module" src="./js/main.js"></script>
+  <!--<script type="text/javascript" src="./js/gameSoluce.js"></script>-->
+</body>
+</html>
