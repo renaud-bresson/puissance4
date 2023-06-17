@@ -3,13 +3,13 @@ import Player from './Player.js';
 class Puissance4 {
   
   constructor(rows, cols, player1, player2) {
-
+    // Instanciation des inputs
     this.rows = rows;
     this.cols = cols;
     this.player1 = player1;
     this.player2 = player2;
     
-    // cet tableau à deux dimensions contient l'état du jeu:
+    // Tableau qui contient l'état du jeu:
     //   0: case vide
     //   1: pion du joueur 1
     //   2: pion du joueur 2
@@ -19,8 +19,10 @@ class Puissance4 {
     }
     // Id du prochain joueur
     this.playerId = 1;
+
     // Nombre de coups joués
     this.moves = 0;
+
     /* un entier indiquant le gagnant:
         null: la partie continue
             0: la partie est nulle
@@ -44,24 +46,21 @@ class Puissance4 {
     this.player2ScoreHeadSpan = document.querySelector('#player2ScoreHeadSpan');
     this.player2Score = document.querySelector('#player2Score');
 
-    // L'élément du DOM où se fait l'affichage du jeu
+    // Grille de jeu
     this.p4div = document.querySelector('#p4');
-    // On ajoute le gestionnaire d'événements pour gérer le click
-    //
-    // Pour des raisons techniques, il est nécessaire de passer comme gestionnaire
-    // une fonction anonyme faisant appel à `this.handle_click`. Passer directement
-    // `this.handle_click` comme gestionnaire, sans wrapping, rendrait le mot clef
-    // `this` inutilisable dans le gestionnaire. Voir le "binding de this".
+
+    // Gestion des clicks sur la grille click
     this.p4div.addEventListener('click', (event) => this.handle_click(event));
-    // On fait l'affichage
-    this.initEvents(); // Ajout de l'écouteur d'événements
+
+    // Affichage
+    this.initEvents(); // Ajout de l'écouteur d'événements sur bouton reset
     this.render();
   }
 
   
 
 
-  /* Affiche le plateau de jeu dans le DOM */
+  /* Methode qui affiche le jeu dans le DOM */
   render() {
     // Affichage tableau de scores
     player1ScoreHeadSpan.innerHTML=this.player1.name;
@@ -73,16 +72,15 @@ class Puissance4 {
     player2Score.innerHTML=this.player2.score;
     player2Score.style.backgroundColor = this.player2.color;
 
+    // Construction de la <table>
     let table = document.createElement('table');
-    //ATTENTION, la page html est écrite de haut en bas. Les indices 
-    //pour le jeu vont de bas en haut (compteur i de la boucle)
     for (let i = this.rows - 1; i >= 0; i--) {
       let tr = table.appendChild(document.createElement('tr'));
       for (let j = 0; j < this.cols; j++) {
         let td = tr.appendChild(document.createElement('td'));
-        let colour = this.board[i][j];
-        if (colour){
-          if (parseInt(colour) == 1){
+        let color = this.board[i][j];
+        if (color){
+          if (parseInt(color) == 1){
             td.style.backgroundColor = this.player1.color;
           } else {
             td.style.backgroundColor = this.player2.color;
@@ -92,7 +90,8 @@ class Puissance4 {
       }
     }
 
-    if (this.moves%2 == 1) {
+    // Affichage du joueur dont c'est le tour
+    if (this.playerId == 2) {
       this.playerNameDisplay.innerHTML=this.player2.name
       this.playerNameDisplay.style.color=this.player2.color
       this.gameTurnDisplay.innerHTML=this.moves+1;
@@ -102,13 +101,13 @@ class Puissance4 {
       this.gameTurnDisplay.innerHTML=this.moves+1;
     }
 
+    // Mise à jour du DOM
     this.p4div.innerHTML = '';
     this.p4div.appendChild(table);
 
-
-
   }
   
+  /* Methode ajoute l'indice du joueur à la row/column du tableau */
   set(row, column, playerId) {
     // On colore la case
     this.board[row][column] = playerId;
@@ -116,11 +115,10 @@ class Puissance4 {
     this.moves++;
   }
 
-  /* Cette méthode ajoute un pion dans une colonne */
+  /* Méthode qui ajoute un pion dans la colonne et renvoie la ligne concernée */
   play(column) {
     // Trouver la première case libre dans la colonne
     let row;
-    // console.log(this.board);
     for (let i = 0; i < this.rows; i++) {
       if (this.board[i][column] == 0) {
         row = i;
@@ -137,10 +135,12 @@ class Puissance4 {
     }
   }
   
+  /* Méthode qui gère les évenements au click
+    Coloration de la cellule et enchainement sur suite partie ou affichage du résultat */
   handle_click(event) {
     // Vérifier si la partie est encore en cours
     if (this.winner !== null) {
-      if (window.confirm("Game over!\n\nVoulez-vous continuer le match ?")) {
+      if (window.confirm("Game over!\n\nVoulez-vous faire une autre partie ?")) {
         this.reset();
         this.render();
       } else {
@@ -150,32 +150,28 @@ class Puissance4 {
     }
 
     let column = event.target.dataset.column;
+    // Si click valide on récupère la première ligne vide sinon on renvoie colonne pleine
     if (column !== undefined) {
-      //attention, les variables dans les datasets sont TOUJOURS 
-      //des chaînes de caractères. Si on veut être sûr de ne pas faire de bêtise,
-      //il vaut mieux la convertir en entier avec parseInt
       column = parseInt(column);
-        let row = this.play(parseInt(column));
+      let row = this.play(parseInt(column));
       
       if (row === null) {
-        window.alert("Column is full!");
+        window.alert("Cette colonne est pleine !");
       } else {
-        // Vérifier s'il y a un gagnant, ou si la partie est finie
+        // Vérifier s'il y a un gagnant, ou si match nul
         if (this.win(row, column, this.playerId)) {
           this.winner = this.playerId;
         } else if (this.moves >= this.rows * this.columns) {
           this.winner = 0;
         }
-        // Passer le tour : 3 - 2 = 1, 3 - 1 = 2
-        // this.playerId = 3 - this.playerId;
-        this.playerId = 3 - this.playerId;
 
+        // Passer le tour : 3 - 2 = 1, 3 - 1 = 2
+        this.playerId = 3 - this.playerId;
 
         // Mettre à jour l'affichage
         this.render()
         
-        //Au cours de l'affichage, pensez eventuellement, à afficher un 
-        //message si la partie est finie...
+        // Affiche nom du gagnant si la partie est finie
         switch (this.winner) {
           case 0: 
             window.alert("Match nul !!"); 
@@ -197,14 +193,11 @@ class Puissance4 {
     }
   }
 
-  /* 
-    Cette méthode vérifie si le coup dans la case `row`, `column` par
+  /* Méthode qui vérifie si le coup dans la case `row`, `column` par
     le joueur `player` est un coup gagnant.
-    
     Renvoie :
       true  : si la partie est gagnée par le joueur `player`
-      false : si la partie continue
-  */
+      false : si la partie continue */
   win(row, column, player) {
     // Horizontal
     let count = 0;
@@ -220,8 +213,11 @@ class Puissance4 {
     }
     // Diagonal
     count = 0;
+    console.log(row);
     let shift = row - column;
-    for (let i = Math.max(shift, 0); i < Math.min(this.rows, this.cols + shift); i++) {
+    // for (let i = Math.max(shift, 0); i < Math.min(this.rows, this.cols + shift); i++) {
+    for (let i = Math.max(shift, 0); i < this.rows; i++) {
+      console.log('diagonal');
       count = (this.board[i][i - shift] == player) ? count+1 : 0;
       if (count >= 4) return true;
     }
@@ -229,7 +225,7 @@ class Puissance4 {
     count = 0;
     shift = row + column;
     for (let i = Math.max(shift - this.cols + 1, 0); i < Math.min(this.rows, shift + 1); i++) {
-      // console.log(i,shift-i,shift)
+      console.log('anti-diagonal');
       count = (this.board[i][shift - i] == player) ? count+1 : 0;
       if (count >= 4) return true;
     }

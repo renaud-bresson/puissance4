@@ -24,7 +24,21 @@ body #p4 td {
   margin: 0px;
   padding: 0px;
   border: 2px #0284c7;
-  border-radius: 2cm;
+  border-radius: 50%;
   background-color: white;
   cursor: pointer;
+}
+body #controlButtons {
+  display: block;
+}
+body #responsiveControlButtons {
+  display: none;
+}
+@media only screen and (max-width: 600px) {
+  body #controlButtons {
+    display: none;
+  }
+  body #responsiveControlButtons {
+    display: block;
+  }
 }/*# sourceMappingURL=style.css.map */
